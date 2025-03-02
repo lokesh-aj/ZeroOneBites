@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="textColor_New">#1FC57A</color>
+	<color name="textColor_New">#BE1515</color>
+
+	<color name="gradient_start">#E85353</color> <!-- Light Red -->
+	<color name="gradient_end">#BE1515</color>   <!-- Dark Red -->
 
 	<color name="colorPrimary">#ffffff</color>
 	<color name="colorPrimaryDark">#000000</color>
