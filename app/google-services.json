@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "910960608150",
+    "project_id": "grabit-v1",
+    "storage_bucket": "grabit-v1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910960608150:android:6f09336ffd8c77a92fd3b7",
+        "android_client_info": {
+          "package_name": "com.example.grabit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHLArzQsoBf_H3PYsU11P09vIj0z8CYvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
