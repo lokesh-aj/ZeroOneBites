@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private SharedPreferences sharedPreferences;
 
+
     public void goToActivity() {
         Intent intent = new Intent(this, Dashboard.class);
         startActivity(intent);
@@ -38,12 +39,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-
-        // Check if the user is already logged in
-        if (sharedPreferences.getBoolean("logged", false)) {
-            goToActivity();
-            return;  // Prevent further execution
-        }
 
         // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");

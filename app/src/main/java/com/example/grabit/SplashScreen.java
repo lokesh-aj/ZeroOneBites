@@ -1,6 +1,8 @@
 package com.example.grabit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -12,10 +14,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 public class SplashScreen extends AppCompatActivity {
+
+    private SharedPreferences sharedPreferences;
+
+    public void goToActivity() {
+        Intent intent = new Intent(this, Dashboard.class);
+        startActivity(intent);
+        finish();  // Finish login activity to prevent going back to it
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Check if the user is already logged in
+        if (sharedPreferences.getBoolean("logged", false)) {
+            goToActivity();
+            return;  // Prevent further execution
+        }
 
         // Find the TextView
         TextView textView = findViewById(R.id.textView);
