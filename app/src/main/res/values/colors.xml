@@ -29,6 +29,13 @@
 	<color name="lavender">#8692f7</color>
 	<color name="iconColor">#FEAD1D</color>
 
+	<color name="cart_colorPrimary">#6200EE</color>
+	<color name="cart_colorAccent">#FF4081</color>
+	<color name="light_gray">#F5F5F5</color>
+	<color name="gray">#B0B0B0</color>
+	<color name="red">#D32F2F</color>
+
+
 	<color name="startColor">#53E88B</color>
 	<color name="endColor">#15BE77</color>
 </resources>

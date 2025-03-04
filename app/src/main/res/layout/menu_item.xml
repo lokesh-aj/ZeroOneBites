@@ -12,8 +12,8 @@
         android:layout_height="87dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:cardCornerRadius="22dp"
-        app:cardElevation="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp">
+            android:padding="10dp">
 
             <!-- ImageView -->
             <ImageView
@@ -66,10 +66,10 @@
             <!-- Third TextView (Right-aligned text) -->
             <TextView
                 android:id="@+id/menuAddToCart"
-                android:layout_width="80dp"
-                android:layout_height="20dp"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
                 android:layout_marginEnd="12dp"
-                android:background="@drawable/addtocartshape"
+                android:background="@drawable/greenbuttongradient"
                 android:gravity="center"
                 android:text="Add To Cart"
                 android:textColor="@color/white"

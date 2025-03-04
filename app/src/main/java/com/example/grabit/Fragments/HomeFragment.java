@@ -7,17 +7,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.grabit.Adapter.PopularAdapter;
-import com.example.grabit.R;
 import com.example.grabit.databinding.FragmentHomeBinding;
+import com.example.grabit.Adapter.GridItemAdapter;
+import com.example.grabit.Model.GridItem;
+import com.example.grabit.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-
+    private RecyclerView gridRecyclerView;
+    private GridItemAdapter adapter;
+    private List<GridItem> itemList;
     private FragmentHomeBinding binding;
+
 
     @Nullable
     @Override
@@ -26,10 +35,23 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        gridRecyclerView = view.findViewById(R.id.gridRecyclerView);
+        gridRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        itemList = new ArrayList<>();
+        itemList.add(new GridItem("Breakfast", R.drawable.burger));
+        itemList.add(new GridItem("Lunch", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        adapter = new GridItemAdapter(getContext(), itemList);
+        gridRecyclerView.setAdapter(adapter);
+
         binding.viewAllMenu.setOnClickListener(v -> {
             MenuBottomSheetFragment bottomSheetDialog = new MenuBottomSheetFragment();
-            bottomSheetDialog.show(getParentFragmentManager(), "Test");
+            bottomSheetDialog.show(getParentFragmentManager(), "MenuBottomSheet");
         });
+
 
         // Initialize data
         List<String> foodName = Arrays.asList("Burger", "Sandwich", "MOMOS");
@@ -50,3 +72,4 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 }
+
