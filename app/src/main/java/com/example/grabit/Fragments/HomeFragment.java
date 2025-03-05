@@ -59,9 +59,10 @@ public class HomeFragment extends Fragment {
         List<Integer> popularFoodImages = Arrays.asList(R.drawable.menu1, R.drawable.menu2, R.drawable.menu3);
 
         // Set up RecyclerView
-        PopularAdapter adapter = new PopularAdapter(new ArrayList<>(foodName), new ArrayList<>(popularFoodImages), new ArrayList<>(prices));
+        PopularAdapter adapter = new PopularAdapter(requireContext(), new ArrayList<>(foodName), new ArrayList<>(popularFoodImages), new ArrayList<>(prices));
         binding.popularRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.popularRecyclerView.setAdapter(adapter);
+
 
         return view;
     }
@@ -72,4 +73,3 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 }
-
