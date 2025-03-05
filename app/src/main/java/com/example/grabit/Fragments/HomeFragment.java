@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
         });
 
 
+
         // Initialize data
         List<String> foodName = Arrays.asList("Burger", "Sandwich", "MOMOS");
         List<String> prices = Arrays.asList("₹50", "₹60", "₹70");

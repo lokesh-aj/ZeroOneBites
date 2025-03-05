@@ -116,7 +116,7 @@ public class CartFragment extends Fragment {
         for (CartItem item : cartItemList) {
             total += item.getPrice() * item.getQuantity();
         }
-        totalPriceText.setText("Total: ₹" + total);
+        totalPriceText.setText(String.valueOf(total));
     }
 
     @Override

@@ -63,7 +63,6 @@
                 app:layout_constraintStart_toStartOf="@+id/menuFoodName"
                 app:layout_constraintTop_toBottomOf="@+id/menuFoodName" />
 
-            <!-- Third TextView (Right-aligned text) -->
             <TextView
                 android:id="@+id/menuAddToCart"
                 android:layout_width="100dp"
@@ -76,6 +75,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/menuFoodName" />
+            <!-- Third TextView (Right-aligned text) -->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
