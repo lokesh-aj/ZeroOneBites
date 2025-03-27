@@ -5,20 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.grabit.Adapter.MenuAdapter;
 import com.example.grabit.R;
 import com.example.grabit.databinding.FragmentMenuBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,9 +27,13 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentMenuBottomSheetBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        setupBottomSheet();
+        setupRecyclerView();
+        binding.btnBack.setOnClickListener(v -> dismissWithAnimation());
+        return binding.getRoot();
+    }
 
-        // Setup BottomSheetDialog
+    private void setupBottomSheet() {
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
         if (dialog != null) {
             dialog.setOnShowListener(dialogInterface -> {
@@ -44,16 +44,13 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
                     bottomSheetBehavior.setPeekHeight(0);
                     bottomSheetBehavior.setHideable(true);
                     bottomSheetBehavior.setSkipCollapsed(true);
-
-                    // Apply smooth enter animation
                     animateSheetOpen(bottomSheet);
                 }
             });
         }
+    }
 
-        binding.btnBack.setOnClickListener(v -> dismissWithAnimation());
-
-        // Initialize data
+    private void setupRecyclerView() {
         List<String> menuFoodName = Arrays.asList("Burger", "Sandwich", "Momo", "Pizza", "Sandwich", "Momo");
         List<String> menuItemPrice = Arrays.asList("₹50", "₹50", "₹50", "₹50", "₹50", "₹50");
         List<Integer> menuImage = Arrays.asList(
@@ -65,12 +62,9 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
                 R.drawable.menu6
         );
 
-        // Set up RecyclerView
-        MenuAdapter adapter = new MenuAdapter(new ArrayList<>(menuFoodName), new ArrayList<>(menuItemPrice), new ArrayList<>(menuImage));
         binding.menuRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.menuRecyclerView.setAdapter(adapter);
-
-        return view;
+        // Now using the updated MenuAdapter constructor with Context parameter
+        binding.menuRecyclerView.setAdapter(new MenuAdapter(requireContext(), menuFoodName, menuItemPrice, menuImage));
     }
 
     private void dismissWithAnimation() {

@@ -1,12 +1,14 @@
 package com.example.grabit.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.grabit.Adapter.CartAdapter;
 import com.example.grabit.Model.CartItem;
+import com.example.grabit.PaymentConfirmationActivity;
 import com.example.grabit.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,6 +55,10 @@ public class CartFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(cartAdapter);
+
+        Button proceedToPayButton = view.findViewById(R.id.button2);
+        proceedToPayButton.setOnClickListener(v -> proceedToPayment());
+
 
         loadCartItems();
 
@@ -110,6 +117,17 @@ public class CartFragment extends Fragment {
             updateTotalPrice();
         });
     }
+    private void proceedToPayment() {
+        double total = 0;
+        for (CartItem item : cartItemList) {
+            total += item.getPrice() * item.getQuantity();
+        }
+
+        Intent intent = new Intent(getActivity(), PaymentConfirmationActivity.class);
+        intent.putExtra("totalAmount", total);
+        startActivity(intent);
+    }
+
 
     public void updateTotalPrice() {
         double total = 0;

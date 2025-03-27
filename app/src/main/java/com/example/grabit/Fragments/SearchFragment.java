@@ -46,7 +46,7 @@ public class SearchFragment extends Fragment {
         View view = binding.getRoot();
 
         // Initialize RecyclerView and adapter
-        adapter = new MenuAdapter(filteredMenuFoodName, filteredMenuItemPrice, filteredMenuImage);
+        adapter = new MenuAdapter(requireContext(), filteredMenuFoodName, filteredMenuItemPrice, filteredMenuImage);
         binding.menuRecyclerView2.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.menuRecyclerView2.setAdapter(adapter);
 

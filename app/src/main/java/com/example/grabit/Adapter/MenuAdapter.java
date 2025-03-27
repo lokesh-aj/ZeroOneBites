@@ -1,19 +1,30 @@
 package com.example.grabit.Adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.grabit.R;
 import com.example.grabit.databinding.MenuItemBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
 
     private List<String> menuItemName;
     private List<String> menuItemPrice;
     private List<Integer> menuItemImage;
+    private Context context;
+    private SharedPreferences sharedPreferences;
 
-    public MenuAdapter(List<String> menuItemName, List<String> menuItemPrice, List<Integer> menuItemImage) {
+    public MenuAdapter(Context context, List<String> menuItemName, List<String> menuItemPrice, List<Integer> menuItemImage) {
+        this.context = context;
         this.menuItemName = menuItemName;
         this.menuItemPrice = menuItemPrice;
         this.menuItemImage = menuItemImage;
@@ -48,6 +59,50 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             binding.menuFoodName.setText(menuItemName.get(position));
             binding.menuPrice.setText(menuItemPrice.get(position));
             binding.menuImage.setImageResource(menuItemImage.get(position));
+
+            // Use the correct view from the layout: menuAddToCart
+            binding.menuAddToCart.setOnClickListener(v -> addToCart(position));
+        }
+
+        private void addToCart(int position) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            String userId = sharedPreferences.getString("sapID", "0");
+
+            if (userId.equals("0")) {
+                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double priceValue;
+            try {
+                priceValue = Double.parseDouble(menuItemPrice.get(position).replace("₹", "").trim());
+            } catch (NumberFormatException e) {
+                Toast.makeText(context, "Invalid price format", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Map<String, Object> cartItem = new HashMap<>();
+            cartItem.put("name", menuItemName.get(position));
+            cartItem.put("price", priceValue);
+            cartItem.put("image", getImageUrlFromResource(menuItemImage.get(position)));
+
+            db.collection("Users").document(userId)
+                    .collection("Cart").add(cartItem)
+                    .addOnSuccessListener(documentReference ->
+                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show());
+        }
+
+        private String getImageUrlFromResource(int imageResId) {
+            if (imageResId == R.drawable.menu1) {
+                return "https://example.com/menu1.jpg";
+            } else if (imageResId == R.drawable.menu2) {
+                return "https://example.com/menu2.jpg";
+            } else {
+                return "https://example.com/default.jpg";
+            }
         }
     }
 }

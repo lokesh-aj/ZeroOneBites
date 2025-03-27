@@ -57,56 +57,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Subtotal -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="6dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sub-Total"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/txtSubTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹ 120"
-                    android:textColor="#2C2C2C"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-
-            <!-- Discount -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="6dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Discount"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/txtDiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹ 20"
-                    android:textColor="#2C2C2C"
-                    android:textSize="16sp"/>
-            </LinearLayout>
 
             <!-- Total -->
             <LinearLayout
@@ -140,7 +91,7 @@
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:text="Proceed"
+                android:text="Place Order"
                 android:elevation="10dp"
                 android:textColor="@color/textColor_New"
                 android:textAllCaps="false"
