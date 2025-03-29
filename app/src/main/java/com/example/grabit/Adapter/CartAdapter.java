@@ -53,11 +53,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             if (item.getQuantity() > 1) {
                 updateQuantity(item, item.getQuantity() - 1);
             } else {
-                Toast.makeText(holder.itemView.getContext(), "Cart Item can't go beyond 1", Toast.LENGTH_SHORT).show();
+                Toast.makeText(holder.itemView.getContext(), "Cart Item can't go below 1", Toast.LENGTH_SHORT).show();
             }
         });
         holder.deleteBtn.setOnClickListener(v -> deleteCartItem(item));
-
     }
 
     private void updateQuantity(CartItem item, int newQuantity) {

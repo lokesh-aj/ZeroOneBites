@@ -1,84 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"> <!-- Changed from match_parent to wrap_content -->
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="295dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-    app:cardCornerRadius="22dp"
-    app:cardElevation="10dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"> <!-- Added bottom constraint -->
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <!-- ImageView -->
         <ImageView
-            android:id="@+id/foodImagePopular"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:id="@+id/recipeImage"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:src="@drawable/menu1" />
 
-        <!-- First TextView (Title) -->
-        <TextView
-            android:id="@+id/foodNamePopular"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="Food Name"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/foodImagePopular"
-            app:layout_constraintStart_toEndOf="@+id/foodImagePopular"
-            app:layout_constraintTop_toTopOf="@+id/foodImagePopular"
-            app:layout_constraintVertical_bias="0.3" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
-        <!-- Second TextView (Subtext) -->
-        <TextView
-            android:id="@+id/pricePopular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="₹5"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/foodNamePopular"
-            app:layout_constraintTop_toBottomOf="@+id/foodNamePopular" />
+            <TextView
+                android:id="@+id/recipeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Food Name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <!-- Third TextView (Right-aligned text) -->
+            <TextView
+                android:id="@+id/recipePrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="₹50"
+                android:textColor="@color/textColor_New"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/addToCartPopular"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/greenbuttongradient"
-            android:gravity="center"
-            android:text="Add To Cart"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/foodNamePopular" />
+            <TextView
+                android:id="@+id/addToCartButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/greenbuttongradient"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Add to Cart"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </LinearLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>

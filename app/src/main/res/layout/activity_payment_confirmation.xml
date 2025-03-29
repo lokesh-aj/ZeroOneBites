@@ -62,5 +62,12 @@
             android:text="₹1,299.00"
             android:textColor="#5F6368"
             android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/ord_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="order id"
+            android:textColor="#5F6368"
+            android:textSize="18sp"/>
     </LinearLayout>
 </RelativeLayout>
