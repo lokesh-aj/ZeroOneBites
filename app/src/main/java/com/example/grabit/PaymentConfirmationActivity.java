@@ -2,10 +2,12 @@ package com.example.grabit;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,8 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
     private TextView titleText;
     private TextView amountText;
 
+    private TextView ordId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +37,20 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
         checkmarkIcon = findViewById(R.id.checkmark_icon);
         titleText = findViewById(R.id.title_text);
         amountText = findViewById(R.id.amount_text);
+        ordId = findViewById(R.id.ord_id);
+
 
         // Retrieve and display the transferred total amount
         double totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
         amountText.setText("₹" + String.format("%.2f", totalAmount));
+        String orderText = getIntent().getStringExtra("orderId");
+        ordId.setText("( Order ID: "+orderText+" )");
 
         // Start animations
         animatePaymentConfirmation();
+
+
+        Intent intent = new Intent();
     }
 
     private void animatePaymentConfirmation() {

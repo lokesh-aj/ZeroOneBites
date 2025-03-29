@@ -22,11 +22,15 @@ import com.example.grabit.PaymentConfirmationActivity;
 import com.example.grabit.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartFragment extends Fragment {
 
@@ -59,12 +63,12 @@ public class CartFragment extends Fragment {
         Button proceedToPayButton = view.findViewById(R.id.button2);
         proceedToPayButton.setOnClickListener(v -> proceedToPayment());
 
-
         loadCartItems();
 
         return view;
     }
 
+    // This listener now merges items with the same name (or use a unique product identifier)
     private void loadCartItems() {
         CollectionReference cartRef = db.collection("Users").document(userId).collection("Cart");
 
@@ -74,15 +78,16 @@ public class CartFragment extends Fragment {
                 return;
             }
 
-            cartItemList.clear();
+            // Merge duplicate items by using product name as key
+            Map<String, CartItem> mergedItems = new HashMap<>();
+
             for (DocumentSnapshot doc : value.getDocuments()) {
                 String id = doc.getId();
                 String name = doc.getString("name");
 
-                // 🔹 Handling "price" properly
+                // Handle price
                 double price = 0.0;
                 Object priceObj = doc.get("price");
-
                 if (priceObj instanceof Number) {
                     price = ((Number) priceObj).doubleValue();
                 } else if (priceObj instanceof String) {
@@ -93,7 +98,7 @@ public class CartFragment extends Fragment {
                     }
                 }
 
-                // 🔹 Handling "image" properly
+                // Handle image
                 String image = "";
                 Object imageObj = doc.get("image");
                 if (imageObj instanceof String) {
@@ -102,8 +107,8 @@ public class CartFragment extends Fragment {
                     Log.e("CartFragment", "Invalid image format: " + imageObj);
                 }
 
-                // 🔹 Handling "quantity" properly
-                int quantity = 1; // Default quantity
+                // Handle quantity
+                int quantity = 1;
                 if (doc.contains("quantity")) {
                     Long qty = doc.getLong("quantity");
                     if (qty != null) {
@@ -111,23 +116,82 @@ public class CartFragment extends Fragment {
                     }
                 }
 
-                cartItemList.add(new CartItem(id, name, price, image, quantity));
+                // Merge items – if an item with the same name already exists, sum their quantities.
+                if (mergedItems.containsKey(name)) {
+                    CartItem existingItem = mergedItems.get(name);
+                    existingItem.setQuantity(existingItem.getQuantity() + quantity);
+                } else {
+                    mergedItems.put(name, new CartItem(id, name, price, image, quantity));
+                }
             }
+            cartItemList.clear();
+            cartItemList.addAll(mergedItems.values());
             cartAdapter.notifyDataSetChanged();
             updateTotalPrice();
         });
     }
+
     private void proceedToPayment() {
-        double total = 0;
+        double tempTotal = 0;
         for (CartItem item : cartItemList) {
-            total += item.getPrice() * item.getQuantity();
+            tempTotal += item.getPrice() * item.getQuantity();
         }
+        final double total = tempTotal;
 
-        Intent intent = new Intent(getActivity(), PaymentConfirmationActivity.class);
-        intent.putExtra("totalAmount", total);
-        startActivity(intent);
+        // Generate a unique order ID using Firestore's automatic ID
+        String orderId = db.collection("Orders").document().getId();
+        final String finalOrderId = orderId;
+
+        // Prepare the order data
+        Map<String, Object> orderData = new HashMap<>();
+        orderData.put("orderId", finalOrderId);
+        orderData.put("userId", userId);
+        orderData.put("totalAmount", total);
+        orderData.put("timestamp", FieldValue.serverTimestamp());
+
+        // Build a list of order items from cart items
+        List<Map<String, Object>> orderItems = new ArrayList<>();
+        for (CartItem item : cartItemList) {
+            Map<String, Object> itemData = new HashMap<>();
+            itemData.put("id", item.getId());
+            itemData.put("name", item.getName());
+            itemData.put("price", item.getPrice());
+            itemData.put("image", item.getImage());
+            itemData.put("quantity", item.getQuantity());
+            orderItems.add(itemData);
+        }
+        orderData.put("items", orderItems);
+
+        // Create the order in the "Orders" collection
+        db.collection("Orders").document(finalOrderId)
+                .set(orderData)
+                .addOnSuccessListener(aVoid -> {
+                    // After order creation, clear the cart using a batch deletion
+                    WriteBatch batch = db.batch();
+                    db.collection("Users").document(userId).collection("Cart")
+                            .get()
+                            .addOnSuccessListener(querySnapshot -> {
+                                for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                    batch.delete(doc.getReference());
+                                }
+                                batch.commit().addOnSuccessListener(aVoid1 -> {
+                                    // Proceed to the PaymentConfirmationActivity
+                                    Intent intent = new Intent(getActivity(), PaymentConfirmationActivity.class);
+                                    intent.putExtra("totalAmount", total);
+                                    intent.putExtra("orderId", finalOrderId);
+                                    startActivity(intent);
+                                }).addOnFailureListener(e -> {
+                                    Log.e("CartFragment", "Failed to clear cart items: " + e.getMessage());
+                                });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("CartFragment", "Failed to get cart items for deletion: " + e.getMessage());
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("CartFragment", "Failed to create order: " + e.getMessage());
+                });
     }
-
 
     public void updateTotalPrice() {
         double total = 0;
