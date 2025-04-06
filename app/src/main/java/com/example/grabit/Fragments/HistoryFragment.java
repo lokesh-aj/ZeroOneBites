@@ -1,14 +1,29 @@
 package com.example.grabit.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.grabit.Adapter.HistoryAdapter;
+import com.example.grabit.Helper.SwipeToDeleteCallback;
+import com.example.grabit.Model.Voucher;
 import com.example.grabit.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +40,13 @@ public class HistoryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView historyRecyclerView;
+    private TextView emptyStateTextView;
+    private HistoryAdapter historyAdapter;
+    private List<Voucher> voucherList;
+    private FirebaseFirestore db;
+    private String userId;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -58,9 +80,64 @@ public class HistoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Get user ID from SharedPreferences
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("sapID", "0");
+
+        // Initialize views
+        historyRecyclerView = view.findViewById(R.id.historyRecyclerView);
+        emptyStateTextView = view.findViewById(R.id.emptyStateTextView);
+        
+        // Initialize RecyclerView
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        voucherList = new ArrayList<>();
+        historyAdapter = new HistoryAdapter(voucherList, requireContext());
+        historyRecyclerView.setAdapter(historyAdapter);
+
+        // Add swipe functionality
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(historyAdapter, requireContext());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchHelper.attachToRecyclerView(historyRecyclerView);
+
+        // Load vouchers
+        loadVouchers();
+
+        return view;
+    }
+
+    private void loadVouchers() {
+        db.collection("Voucher")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        voucherList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Voucher voucher = document.toObject(Voucher.class);
+                            voucherList.add(voucher);
+                        }
+                        
+                        // Update UI based on list size
+                        if (voucherList.isEmpty()) {
+                            historyRecyclerView.setVisibility(View.GONE);
+                            emptyStateTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            historyRecyclerView.setVisibility(View.VISIBLE);
+                            emptyStateTextView.setVisibility(View.GONE);
+                        }
+                        
+                        historyAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), "Error loading vouchers", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,10 +26,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etSapId, etPassword;
     private Button btnLogin;
-
+    private TextView signUpTextView;
     private DatabaseReference databaseReference;
     private SharedPreferences sharedPreferences;
-
 
     public void goToActivity() {
         Intent intent = new Intent(this, Dashboard.class);
@@ -47,11 +47,17 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
-        etSapId = findViewById(R.id.sap_id);
-        etPassword = findViewById(R.id.password);
-        btnLogin = findViewById(R.id.button_login);
+        // Initialize views
+        etSapId = findViewById(R.id.sapIdEditText);
+        etPassword = findViewById(R.id.passwordEditText);
+        btnLogin = findViewById(R.id.loginButton);
+        signUpTextView = findViewById(R.id.signUpTextView);
 
         btnLogin.setOnClickListener(v -> loginUser());
+        
+        signUpTextView.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+        });
     }
 
     private void loginUser() {
@@ -108,5 +114,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 }

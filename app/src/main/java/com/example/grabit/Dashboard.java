@@ -4,16 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import android.util.Log;
-import androidx.annotation.NonNull;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -21,7 +27,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import javax.annotation.Nullable;
-
 
 public class Dashboard extends AppCompatActivity {
     private void setCartBadge(int count) {
@@ -35,8 +40,6 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void updateCartBadge() {
-
-
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String user =  sharedPreferences.getString("sapID", "0");
         if (user != "0") {
@@ -58,7 +61,6 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
-
     public void goToActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -68,25 +70,84 @@ public class Dashboard extends AppCompatActivity {
     private FirebaseFirestore db;
     private SharedPreferences sharedPreferences;
     private BottomNavigationView bottomNav;
-
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private AppBarConfiguration appBarConfiguration;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // Initialize Firebase Firestore and Authentication
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Initialize NavController
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
-        // Setup BottomNavigationView with NavController
+        // Initialize views
         bottomNav = findViewById(R.id.bottom_navigation);
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        // Set up the toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Get the NavHostFragment
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            // Get the NavController from the NavHostFragment
+            navController = navHostFragment.getNavController();
+
+            // Configure the AppBarConfiguration with the navigation drawer and bottom navigation
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.homeFragment, R.id.historyFragment, R.id.profileFragment, R.id.cartFragment)
+                    .setOpenableLayout(drawerLayout)
+                    .build();
+
+            // Set up the ActionBar with the NavController
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+            // Set up the NavigationView with the NavController
+            navigationView.setNavigationItemSelectedListener(item -> {
+                if (item.getItemId() == R.id.nav_logout) {
+                    // Handle logout
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("logged", false);
+                    editor.apply();
+
+                    // Navigate to login activity
+                    Intent intent = new Intent(Dashboard.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return true;
+                }
+                // Handle other navigation items
+                NavigationUI.onNavDestinationSelected(item, navController);
+                drawerLayout.closeDrawers();
+                return true;
+            });
+
+            // Set up the BottomNavigationView with the NavController
+            NavigationUI.setupWithNavController(bottomNav, navController);
+
+            // Add navigation listener to handle badge updates
+            bottomNav.setOnItemSelectedListener(item -> {
+                NavigationUI.onNavDestinationSelected(item, navController);
+                drawerLayout.closeDrawers();
+                return true;
+            });
+        }
 
         // Update cart badge count dynamically
         updateCartBadge();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     public void logout(View view) {

@@ -52,7 +52,6 @@ public class SplashScreen extends AppCompatActivity {
                 null, Shader.TileMode.CLAMP
         );
 
-
         // Apply shader to TextView
         textView.getPaint().setShader(textShader);
 

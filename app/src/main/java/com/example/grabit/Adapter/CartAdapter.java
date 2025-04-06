@@ -48,14 +48,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         Glide.with(holder.itemView.getContext()).load(item.getImage()).into(holder.image);
 
-        holder.increaseBtn.setOnClickListener(v -> updateQuantity(item, item.getQuantity() + 1));
+        holder.increaseBtn.setOnClickListener(v -> {
+            int currentQuantity = item.getQuantity();
+            updateQuantity(item, currentQuantity + 1);
+        });
+
         holder.decreaseBtn.setOnClickListener(v -> {
-            if (item.getQuantity() > 1) {
-                updateQuantity(item, item.getQuantity() - 1);
+            int currentQuantity = item.getQuantity();
+            if (currentQuantity > 1) {
+                updateQuantity(item, currentQuantity - 1);
             } else {
                 Toast.makeText(holder.itemView.getContext(), "Cart Item can't go below 1", Toast.LENGTH_SHORT).show();
             }
         });
+
         holder.deleteBtn.setOnClickListener(v -> deleteCartItem(item));
     }
 

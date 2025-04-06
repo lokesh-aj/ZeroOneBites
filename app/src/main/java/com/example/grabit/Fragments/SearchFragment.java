@@ -9,21 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.grabit.Adapter.MenuAdapter;
 import com.example.grabit.R;
-import com.example.grabit.databinding.FragmentSearchBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
-
-    private FragmentSearchBinding binding;
+    private SearchView searchView;
+    private RecyclerView recyclerView;
     private MenuAdapter adapter;
 
     // Original menu data
-    private final List<String> originalMenuFoodName = Arrays.asList("Burger", "Sandwich", "Momo", "Pizza", "Sandwich", "Momo");
-    private final List<String> originalMenuItemPrice = Arrays.asList("₹50", "₹50", "₹50", "₹50", "₹50", "₹50");
+    private final List<String> originalMenuFoodName = Arrays.asList(
+            "Burger", "Sandwich", "Momo", "Pizza", "French Fries", "Coffee"
+    );
+    private final List<String> originalMenuItemPrice = Arrays.asList(
+            "₹50", "₹40", "₹60", "₹120", "₹80", "₹30"
+    );
     private final List<Integer> originalMenuImage = Arrays.asList(
             R.drawable.menu1,
             R.drawable.menu2,
@@ -41,23 +45,39 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentSearchBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Initialize RecyclerView and adapter
+        // Initialize views
+        searchView = view.findViewById(R.id.searchView);
+        recyclerView = view.findViewById(R.id.searchResultsRecyclerView);
+
+        // Set up RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MenuAdapter(requireContext(), filteredMenuFoodName, filteredMenuItemPrice, filteredMenuImage);
-        binding.menuRecyclerView2.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.menuRecyclerView2.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
-        // Setup search view and show all menu items initially
-        setupSearchView();
-        showAllMenu();
+        // Show all items initially
+        showAllItems();
+
+        // Set up search functionality
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterItems(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterItems(newText);
+                return true;
+            }
+        });
 
         return view;
     }
 
-    private void showAllMenu() {
+    private void showAllItems() {
         filteredMenuFoodName.clear();
         filteredMenuItemPrice.clear();
         filteredMenuImage.clear();
@@ -69,41 +89,27 @@ public class SearchFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void setupSearchView() {
-        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterMenuItem(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterMenuItem(newText);
-                return true;
-            }
-        });
-    }
-
-    private void filterMenuItem(String query) {
+    private void filterItems(String query) {
         filteredMenuFoodName.clear();
         filteredMenuItemPrice.clear();
         filteredMenuImage.clear();
 
+        String lowercaseQuery = query.toLowerCase().trim();
+
+        if (lowercaseQuery.isEmpty()) {
+            showAllItems();
+            return;
+        }
+
         for (int i = 0; i < originalMenuFoodName.size(); i++) {
             String foodName = originalMenuFoodName.get(i);
-            if (foodName.toLowerCase().contains(query.toLowerCase())) {
+            if (foodName.toLowerCase().contains(lowercaseQuery)) {
                 filteredMenuFoodName.add(foodName);
                 filteredMenuItemPrice.add(originalMenuItemPrice.get(i));
                 filteredMenuImage.add(originalMenuImage.get(i));
             }
         }
-        adapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        adapter.notifyDataSetChanged();
     }
 }

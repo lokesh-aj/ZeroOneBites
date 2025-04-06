@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
@@ -22,8 +23,9 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
     private ImageView checkmarkIcon;
     private TextView titleText;
     private TextView amountText;
-
     private TextView ordId;
+    private String orderId;
+    private double totalAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +41,25 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
         amountText = findViewById(R.id.amount_text);
         ordId = findViewById(R.id.ord_id);
 
+        // Retrieve the transferred data
+        totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
+        orderId = getIntent().getStringExtra("orderId");
 
-        // Retrieve and display the transferred total amount
-        double totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
+        // Display the data
         amountText.setText("₹" + String.format("%.2f", totalAmount));
-        String orderText = getIntent().getStringExtra("orderId");
-        ordId.setText("( Order ID: "+orderText+" )");
+        ordId.setText("( Order ID: " + orderId + " )");
 
         // Start animations
         animatePaymentConfirmation();
 
-
-        Intent intent = new Intent();
+        // Navigate to VoucherActivity after animation completes
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(PaymentConfirmationActivity.this, VoucherActivity.class);
+            intent.putExtra("orderId", orderId);
+            intent.putExtra("totalAmount", totalAmount);
+            startActivity(intent);
+            finish();
+        }, 2000); // Wait for 2 seconds (animation duration)
     }
 
     private void animatePaymentConfirmation() {

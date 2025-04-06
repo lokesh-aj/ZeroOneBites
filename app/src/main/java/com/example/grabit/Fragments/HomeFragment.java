@@ -4,87 +4,109 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.grabit.Adapter.CategoryAdapter;
-import com.example.grabit.Adapter.PopularAdapter;
 import com.example.grabit.Adapter.RecipeAdapter;
+import com.example.grabit.Adapter.PopularAdapter;
 import com.example.grabit.Model.Category;
 import com.example.grabit.Model.Recipe;
 import com.example.grabit.R;
 import com.example.grabit.databinding.FragmentHomeBinding;
+import com.example.grabit.Adapter.GridItemAdapter;
+import com.example.grabit.Model.GridItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
+    private SearchView searchView;
     private RecyclerView categoryRecyclerView;
-    private RecyclerView popularRecyclerView;
+    private RecyclerView needToTryRecyclerView;
     private RecyclerView summerSelectionRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private PopularAdapter popularAdapter;
+    private RecipeAdapter needToTryAdapter;
     private RecipeAdapter summerSelectionAdapter;
     private FragmentHomeBinding binding;
-    private ImageView notificationIcon;
+    private List<GridItem> itemList;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout using ViewBinding
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         // Initialize views
+        searchView = view.findViewById(R.id.searchView);
         categoryRecyclerView = view.findViewById(R.id.categoryRecyclerView);
-        popularRecyclerView = view.findViewById(R.id.needToTryRecyclerView);
+        needToTryRecyclerView = view.findViewById(R.id.needToTryRecyclerView);
         summerSelectionRecyclerView = view.findViewById(R.id.summerSelectionRecyclerView);
-        notificationIcon = view.findViewById(R.id.notificationIcon);
-
-        // Set up notification icon click
-        notificationIcon.setOnClickListener(v -> {
-            // TODO: Implement notification functionality
-            Toast.makeText(getContext(), "Notifications coming soon!", Toast.LENGTH_SHORT).show();
-        });
 
         // Set up category RecyclerView
-        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        categoryAdapter = new CategoryAdapter(getCategoryList());
-        categoryRecyclerView.setAdapter(categoryAdapter);
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        itemList = new ArrayList<>();
+        itemList.add(new GridItem("Breakfast", R.drawable.burger));
+        itemList.add(new GridItem("Lunch", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        GridItemAdapter adapter = new GridItemAdapter(getContext(), itemList);
+        categoryRecyclerView.setAdapter(adapter);
 
-        // Set up Popular RecyclerView
-        popularRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        List<String> foodNames = Arrays.asList("Burger", "Sandwich", "MOMOS");
-        List<Integer> foodImages = Arrays.asList(R.drawable.menu1, R.drawable.menu2, R.drawable.menu3);
-        List<String> prices = Arrays.asList("₹50", "₹60", "₹70");
-        popularAdapter = new PopularAdapter(requireContext(), new ArrayList<>(foodNames), new ArrayList<>(foodImages), new ArrayList<>(prices));
-        popularRecyclerView.setAdapter(popularAdapter);
+        // Set up Need to try RecyclerView
+        needToTryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        needToTryAdapter = new RecipeAdapter(getNeedToTryRecipes());
+        needToTryRecyclerView.setAdapter(needToTryAdapter);
 
         // Set up Summer selection RecyclerView
         summerSelectionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         summerSelectionAdapter = new RecipeAdapter(getSummerSelectionRecipes());
         summerSelectionRecyclerView.setAdapter(summerSelectionAdapter);
 
+        // Set up search view click listener to navigate to SearchFragment
+        searchView.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_searchFragment);
+        });
+        searchView.setFocusable(false);
+
         // Set up See all buttons
-        TextView popularSeeAll = view.findViewById(R.id.viewAllMenu);
+        TextView needToTrySeeAll = view.findViewById(R.id.needToTrySeeAllButton);
         TextView summerSelectionSeeAll = view.findViewById(R.id.summerSelectionSeeAllButton);
 
-        popularSeeAll.setOnClickListener(v -> {
-            PopularMenuBottomSheetFragment bottomSheetDialog = new PopularMenuBottomSheetFragment();
-            bottomSheetDialog.show(getParentFragmentManager(), "PopularMenuBottomSheet");
+        needToTrySeeAll.setOnClickListener(v -> {
+            MenuBottomSheetFragment bottomSheetDialog = new MenuBottomSheetFragment();
+            bottomSheetDialog.show(getParentFragmentManager(), "MenuBottomSheet");
         });
 
         summerSelectionSeeAll.setOnClickListener(v ->
                 Toast.makeText(getContext(), "See all Summer selection recipes", Toast.LENGTH_SHORT).show());
+
+        // Initialize data for popular items
+        List<String> foodName = Arrays.asList("Burger", "Sandwich", "MOMOS");
+        List<String> prices = Arrays.asList("₹50", "₹60", "₹70");
+        List<Integer> popularFoodImages = Arrays.asList(R.drawable.menu1, R.drawable.menu2, R.drawable.menu3);
+
+        // Set up popular RecyclerView with horizontal layout
+        PopularAdapter popularAdapter = new PopularAdapter(requireContext(), 
+            new ArrayList<>(foodName), 
+            new ArrayList<>(popularFoodImages), 
+            new ArrayList<>(prices));
+        binding.needToTryRecyclerView.setLayoutManager(
+            new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding.needToTryRecyclerView.setAdapter(popularAdapter);
 
         return view;
     }
@@ -102,6 +124,15 @@ public class HomeFragment extends Fragment {
         categories.add(new Category("Lunch", R.drawable.ic_lunch, false));
         categories.add(new Category("Dinner", R.drawable.ic_dinner, false));
         return categories;
+    }
+
+    private List<Recipe> getNeedToTryRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("Morning Pancakes", "Deep-fried ball of spiced with ground chickpeas or fava beans.",
+                R.drawable.img_pancakes, 1, "Easy", "300 kcal"));
+        recipes.add(new Recipe("Fresh Tofu Salad", "Crispy tofu, greens, veggies, and tangy sesame ginger dressing.",
+                R.drawable.burger, 10, "Medium", "470 kcal"));
+        return recipes;
     }
 
     private List<Recipe> getSummerSelectionRecipes() {
