@@ -25,6 +25,8 @@
     <style name="Theme.GrabIT.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.GrabIT.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

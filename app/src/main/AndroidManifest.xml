@@ -25,32 +25,36 @@
             android:value="com.google.android.gms.security.ProviderInstaller" />
 
         <activity
-            android:name=".VoucherActivity"
-            android:exported="true" >
-
-        </activity>
-        <activity
-            android:name=".PaymentConfirmationActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".StartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SplashScreen"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.GrabIT.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".VoucherActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".PaymentConfirmationActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".StartActivity"
+            android:exported="false" />
+
         <activity
             android:name=".Dashboard"
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
