@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
     
     // Google Play Services
     implementation 'com.google.android.gms:play-services-base:18.3.0'

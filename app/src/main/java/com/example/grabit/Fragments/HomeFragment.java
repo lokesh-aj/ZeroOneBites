@@ -54,6 +54,36 @@ public class HomeFragment extends Fragment {
         needToTryRecyclerView = view.findViewById(R.id.needToTryRecyclerView);
         summerSelectionRecyclerView = view.findViewById(R.id.summerSelectionRecyclerView);
 
+        // Set up search view
+        searchView.setIconified(true); // Start in iconified state
+        searchView.setQueryHint("Search for food items...");
+        
+        // Set up search view click listener
+        searchView.setOnClickListener(v -> {
+            // Get the current query from the search view
+            String currentQuery = searchView.getQuery().toString();
+            Bundle bundle = new Bundle();
+            bundle.putString("searchQuery", currentQuery);
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment, bundle);
+        });
+
+        // Set up search view query listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Navigate to search fragment with the query
+                Bundle bundle = new Bundle();
+                bundle.putString("searchQuery", query);
+                Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment, bundle);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         // Set up category RecyclerView
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         itemList = new ArrayList<>();
@@ -75,12 +105,6 @@ public class HomeFragment extends Fragment {
         summerSelectionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         summerSelectionAdapter = new RecipeAdapter(getSummerSelectionRecipes());
         summerSelectionRecyclerView.setAdapter(summerSelectionAdapter);
-
-        // Set up search view click listener to navigate to SearchFragment
-        searchView.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_searchFragment);
-        });
-        searchView.setFocusable(false);
 
         // Set up See all buttons
         TextView needToTrySeeAll = view.findViewById(R.id.needToTrySeeAllButton);

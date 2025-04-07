@@ -1,14 +1,26 @@
 package com.example.grabit.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.grabit.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.grabit.databinding.FragmentProfileBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +37,11 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FragmentProfileBinding binding;
+    private FirebaseDatabase database;
+    private DatabaseReference userRef;
+    private String sapId;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,10 +74,105 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        // Initialize Firebase instance
+        database = FirebaseDatabase.getInstance();
+
+        // Get SAP ID from SharedPreferences
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        sapId = sharedPreferences.getString("sapID", null);
+
+        if (sapId != null) {
+            // Initialize database reference with SAP ID
+            userRef = database.getReference().child("Users").child(sapId);
+            
+            // Load user data
+            loadUserData();
+
+            // Set up save button click listener
+            binding.saveButton.setOnClickListener(v -> saveProfileChanges());
+        } else {
+            // User is not logged in, show appropriate UI
+            showNotLoggedInUI();
+        }
+
+        return view;
+    }
+
+    private void showNotLoggedInUI() {
+        // Disable all input fields
+        binding.nameEditText.setEnabled(false);
+        binding.emailEditText.setEnabled(false);
+        binding.phoneEditText.setEnabled(false);
+        binding.saveButton.setEnabled(false);
+
+        // Show message to user
+        binding.nameEditText.setText("Please log in to view and edit your profile");
+        binding.emailEditText.setText("");
+        binding.phoneEditText.setText("");
+    }
+
+    private void loadUserData() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    binding.nameEditText.setText(snapshot.child("name").getValue(String.class));
+                    binding.emailEditText.setText(snapshot.child("email").getValue(String.class));
+                    binding.phoneEditText.setText(snapshot.child("phone").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Error loading profile data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveProfileChanges() {
+        String name = binding.nameEditText.getText().toString().trim();
+        String email = binding.emailEditText.getText().toString().trim();
+        String phone = binding.phoneEditText.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            binding.nameLayout.setError("Name is required");
+            return;
+        }
+
+        if (email.isEmpty()) {
+            binding.emailLayout.setError("Email is required");
+            return;
+        }
+
+        if (phone.isEmpty()) {
+            binding.phoneLayout.setError("Phone number is required");
+            return;
+        }
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", name);
+        userData.put("email", email);
+        userData.put("phone", phone);
+
+        // Update Realtime Database
+        userRef.updateChildren(userData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error updating profile", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
