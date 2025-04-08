@@ -51,4 +51,10 @@
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_popular"
+        android:name="com.example.grabit.Fragments.PopularFragment"
+        android:label="Popular"
+        tools:layout="@layout/fragment_popular" />
+
 </navigation> 

@@ -65,7 +65,7 @@
             app:layout_constraintTop_toTopOf="@+id/popularText" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/needToTryRecyclerView"
+            android:id="@+id/popularRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -82,7 +82,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/needToTryRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/popularRecyclerView" />
 
         <TextView
             android:id="@+id/summerSelectionSeeAllButton"

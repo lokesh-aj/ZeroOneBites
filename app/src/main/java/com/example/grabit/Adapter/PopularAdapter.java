@@ -3,16 +3,31 @@ package com.example.grabit.Adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.grabit.Model.PopularItem;
 import com.example.grabit.R;
 import com.example.grabit.databinding.PopularItemBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,16 +35,113 @@ import java.util.Map;
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularViewHolder> {
 
     private SharedPreferences sharedPreferences;
-    private final List<String> items;
-    private final List<Integer> images;
-    private final List<String> prices;
     private final Context context;
+    private List<Map<String, Object>> foodItems;
+    private List<PopularItem> popularItems;
 
-    public PopularAdapter(Context context, List<String> items, List<Integer> images, List<String> prices) {
+    public PopularAdapter(Context context) {
         this.context = context;
-        this.items = items;
-        this.images = images;
-        this.prices = prices;
+        this.foodItems = new ArrayList<>();
+        this.popularItems = new ArrayList<>();
+        loadPopularItems();
+        fetchFoodItems();
+    }
+
+    private void loadPopularItems() {
+        try {
+            InputStream is = context.getAssets().open("popular_items.json");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder jsonString = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonString.append(line);
+            }
+            reader.close();
+            is.close();
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<PopularItem>>() {}.getType();
+            popularItems = gson.fromJson(jsonString.toString(), listType);
+            
+            // Debug log
+            if (popularItems == null || popularItems.isEmpty()) {
+                Toast.makeText(context, "No popular items loaded from JSON", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Loaded " + popularItems.size() + " popular items", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error loading JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchFoodItems() {
+        DatabaseReference foodRef = FirebaseDatabase.getInstance().getReference("Food Items");
+        foodRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                foodItems.clear();
+                
+                // Debug log
+                Toast.makeText(context, "Fetched " + snapshot.getChildrenCount() + " items from Firebase", Toast.LENGTH_SHORT).show();
+                
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    try {
+                        String itemName = itemSnapshot.child("Item Name").getValue(String.class);
+                        if (itemName == null) {
+                            continue; // Skip items with null names
+                        }
+                        
+                        // Check if this item is in popular items
+                        for (PopularItem popularItem : popularItems) {
+                            if (popularItem != null && itemName.equals(popularItem.getItemName())) {
+                                Map<String, Object> item = new HashMap<>();
+                                item.put("name", itemName);
+                                
+                                Object price = itemSnapshot.child("Price (INR)").getValue();
+                                String imageUrl = itemSnapshot.child("Image URL").getValue(String.class);
+                                
+                                if (price == null || imageUrl == null) {
+                                    continue; // Skip items with missing data
+                                }
+                                
+                                item.put("price", price);
+                                item.put("image", imageUrl);
+                                item.put("rating", popularItem.getAverageRating());
+                                item.put("orders", popularItem.getTotalOrders());
+                                foodItems.add(item);
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Error processing item: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                
+                // Sort foodItems by rating in descending order
+                foodItems.sort((item1, item2) -> {
+                    double rating1 = (double) item1.get("rating");
+                    double rating2 = (double) item2.get("rating");
+                    return Double.compare(rating2, rating1); // Descending order
+                });
+                
+                // Debug log
+                if (foodItems.isEmpty()) {
+                    Toast.makeText(context, "No matching items found", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Found " + foodItems.size() + " matching items", Toast.LENGTH_SHORT).show();
+                }
+                
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Firebase Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @NonNull
@@ -41,15 +153,13 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
 
     @Override
     public void onBindViewHolder(@NonNull PopularViewHolder holder, int position) {
-        String item = items.get(position);
-        int itemImage = images.get(position);
-        String itemPrice = prices.get(position);
-        holder.bind(item, itemImage, itemPrice);
+        Map<String, Object> item = foodItems.get(position);
+        holder.bind(item);
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return foodItems.size();
     }
 
     class PopularViewHolder extends RecyclerView.ViewHolder {
@@ -60,66 +170,60 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             this.binding = binding;
         }
 
-        public void bind(String item, int image, String price) {
-            binding.foodNamePopular.setText(item);
-            binding.foodPricePopular.setText(price);
-            binding.foodImagePopular.setImageResource(image);
+        public void bind(Map<String, Object> item) {
+            binding.foodNamePopular.setText((String) item.get("name"));
+            binding.foodPricePopular.setText("₹" + item.get("price"));
+            
+            // Add rating and orders info
+            double rating = (double) item.get("rating");
+            int orders = (int) item.get("orders");
+            binding.ratingText.setText(String.format("%.1f ★", rating));
+            binding.ordersText.setText(orders + " orders");
+
+            // Load image using Glide
+            String imageUrl = (String) item.get("image");
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(binding.foodImagePopular);
+            } else {
+                // Set a default image if URL is null or empty
+                binding.foodImagePopular.setImageResource(R.drawable.placeholder_image);
+            }
 
             // Handle "Add to Cart" click
-            binding.addToCartPopular.setOnClickListener(v -> addToCart(item, image, price));
+            binding.addToCartPopular.setOnClickListener(v -> addToCart(
+                    (String) item.get("name"),
+                    String.valueOf(item.get("price")),
+                    (String) item.get("image")
+            ));
         }
 
-        private String getImageUrlFromResource(int imageResId) {
-            if (imageResId == R.drawable.menu1) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            } else if (imageResId == R.drawable.menu2) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            }
-            else if (imageResId == R.drawable.menu3) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            }
-            else if (imageResId == R.drawable.menu4) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            }
-            else if (imageResId == R.drawable.menu5) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            }
-            else if (imageResId == R.drawable.menu6) {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/FOOD_CATALOG/IMAGES/CMS/2024/10/28/d8c070a1-31e6-4f67-a2a4-f2201079d410_86a01a3a-e97f-4c70-9cfd-4cd96102e5f0.jpg";
-            }else {
-                return "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2025/2/20/8000dfb3-f5ad-413e-8165-c4e1d506ff73_855090.jpg";
-            }
-        }
-
-
-
-        private void addToCart(String item, int imageResId, String price) {
+        private void addToCart(String itemName, String price, String imageUrl) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             String userId = sharedPreferences.getString("sapID", "0");
 
             if (userId.equals("0")) {
-                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Please login first", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Convert price to double
             double priceValue;
             try {
-                priceValue = Double.parseDouble(price.replace("₹", "").trim());  // Remove ₹ symbol if present
+                priceValue = Double.parseDouble(price);
             } catch (NumberFormatException e) {
                 Toast.makeText(context, "Invalid price format", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Convert image resource ID to a URL
-            String imageUrl = getImageUrlFromResource(imageResId);
-
             Map<String, Object> cartItem = new HashMap<>();
-            cartItem.put("name", item);
-            cartItem.put("price", priceValue);  // Store as double
-            cartItem.put("image", imageUrl);   // Store image URL instead of resource ID
+            cartItem.put("name", itemName);
+            cartItem.put("price", priceValue);
+            cartItem.put("image", imageUrl);
+            cartItem.put("quantity", 1);
 
             db.collection("Users").document(userId)
                     .collection("Cart").add(cartItem)
@@ -128,9 +232,5 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                     .addOnFailureListener(e ->
                             Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show());
         }
-
-
-
-
     }
 }

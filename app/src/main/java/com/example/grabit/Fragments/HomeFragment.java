@@ -33,10 +33,8 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView categoryRecyclerView;
-    private RecyclerView needToTryRecyclerView;
     private RecyclerView summerSelectionRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private RecipeAdapter needToTryAdapter;
     private RecipeAdapter summerSelectionAdapter;
     private FragmentHomeBinding binding;
     private List<GridItem> itemList;
@@ -51,7 +49,6 @@ public class HomeFragment extends Fragment {
         // Initialize views
         searchView = view.findViewById(R.id.searchView);
         categoryRecyclerView = view.findViewById(R.id.categoryRecyclerView);
-        needToTryRecyclerView = view.findViewById(R.id.needToTryRecyclerView);
         summerSelectionRecyclerView = view.findViewById(R.id.summerSelectionRecyclerView);
 
         // Set up search view
@@ -99,41 +96,27 @@ public class HomeFragment extends Fragment {
         GridItemAdapter adapter = new GridItemAdapter(getContext(), itemList);
         categoryRecyclerView.setAdapter(adapter);
 
-        // Set up Need to try RecyclerView
-        needToTryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        needToTryAdapter = new RecipeAdapter(getNeedToTryRecipes());
-        needToTryRecyclerView.setAdapter(needToTryAdapter);
-
         // Set up Summer selection RecyclerView
         summerSelectionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         summerSelectionAdapter = new RecipeAdapter(getSummerSelectionRecipes());
         summerSelectionRecyclerView.setAdapter(summerSelectionAdapter);
 
         // Set up See all buttons
-        TextView needToTrySeeAll = view.findViewById(R.id.needToTrySeeAllButton);
+        TextView popularSeeAll = view.findViewById(R.id.needToTrySeeAllButton);
         TextView summerSelectionSeeAll = view.findViewById(R.id.summerSelectionSeeAllButton);
 
-        needToTrySeeAll.setOnClickListener(v -> {
-            MenuBottomSheetFragment bottomSheetDialog = new MenuBottomSheetFragment();
-            bottomSheetDialog.show(getParentFragmentManager(), "MenuBottomSheet");
+        popularSeeAll.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.navigation_popular);
         });
 
         summerSelectionSeeAll.setOnClickListener(v ->
                 Toast.makeText(getContext(), "See all Summer selection recipes", Toast.LENGTH_SHORT).show());
 
-        // Initialize data for popular items
-        List<String> foodName = Arrays.asList("Burger", "Sandwich", "MOMOS");
-        List<String> prices = Arrays.asList("₹50", "₹60", "₹70");
-        List<Integer> popularFoodImages = Arrays.asList(R.drawable.menu1, R.drawable.menu2, R.drawable.menu3);
-
         // Set up popular RecyclerView with horizontal layout
-        PopularAdapter popularAdapter = new PopularAdapter(requireContext(), 
-            new ArrayList<>(foodName), 
-            new ArrayList<>(popularFoodImages), 
-            new ArrayList<>(prices));
-        binding.needToTryRecyclerView.setLayoutManager(
+        PopularAdapter popularAdapter = new PopularAdapter(requireContext());
+        binding.popularRecyclerView.setLayoutManager(
             new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.needToTryRecyclerView.setAdapter(popularAdapter);
+        binding.popularRecyclerView.setAdapter(popularAdapter);
 
         return view;
     }
@@ -151,15 +134,6 @@ public class HomeFragment extends Fragment {
         categories.add(new Category("Lunch", R.drawable.ic_lunch, false));
         categories.add(new Category("Dinner", R.drawable.ic_dinner, false));
         return categories;
-    }
-
-    private List<Recipe> getNeedToTryRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe("Morning Pancakes", "Deep-fried ball of spiced with ground chickpeas or fava beans.",
-                R.drawable.img_pancakes, 1, "Easy", "300 kcal"));
-        recipes.add(new Recipe("Fresh Tofu Salad", "Crispy tofu, greens, veggies, and tangy sesame ginger dressing.",
-                R.drawable.burger, 10, "Medium", "470 kcal"));
-        return recipes;
     }
 
     private List<Recipe> getSummerSelectionRecipes() {
