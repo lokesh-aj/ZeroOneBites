@@ -17,10 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.grabit.Adapter.CategoryAdapter;
-import com.example.grabit.Adapter.RecipeAdapter;
 import com.example.grabit.Adapter.PopularAdapter;
 import com.example.grabit.Model.Category;
-import com.example.grabit.Model.Recipe;
 import com.example.grabit.R;
 import com.example.grabit.databinding.FragmentHomeBinding;
 import com.example.grabit.Adapter.GridItemAdapter;
@@ -33,9 +31,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView categoryRecyclerView;
-    private RecyclerView summerSelectionRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private RecipeAdapter summerSelectionAdapter;
     private FragmentHomeBinding binding;
     private List<GridItem> itemList;
 
@@ -49,7 +45,6 @@ public class HomeFragment extends Fragment {
         // Initialize views
         searchView = view.findViewById(R.id.searchView);
         categoryRecyclerView = view.findViewById(R.id.categoryRecyclerView);
-        summerSelectionRecyclerView = view.findViewById(R.id.summerSelectionRecyclerView);
 
         // Set up search view
         searchView.setIconified(true); // Start in iconified state
@@ -96,21 +91,12 @@ public class HomeFragment extends Fragment {
         GridItemAdapter adapter = new GridItemAdapter(getContext(), itemList);
         categoryRecyclerView.setAdapter(adapter);
 
-        // Set up Summer selection RecyclerView
-        summerSelectionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        summerSelectionAdapter = new RecipeAdapter(getSummerSelectionRecipes());
-        summerSelectionRecyclerView.setAdapter(summerSelectionAdapter);
-
         // Set up See all buttons
         TextView popularSeeAll = view.findViewById(R.id.needToTrySeeAllButton);
-        TextView summerSelectionSeeAll = view.findViewById(R.id.summerSelectionSeeAllButton);
 
         popularSeeAll.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.navigation_popular);
         });
-
-        summerSelectionSeeAll.setOnClickListener(v ->
-                Toast.makeText(getContext(), "See all Summer selection recipes", Toast.LENGTH_SHORT).show());
 
         // Set up popular RecyclerView with horizontal layout
         PopularAdapter popularAdapter = new PopularAdapter(requireContext());
@@ -134,12 +120,5 @@ public class HomeFragment extends Fragment {
         categories.add(new Category("Lunch", R.drawable.ic_lunch, false));
         categories.add(new Category("Dinner", R.drawable.ic_dinner, false));
         return categories;
-    }
-
-    private List<Recipe> getSummerSelectionRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe("Spaghetti with Tomatoes", "Fresh pasta with cherry tomatoes, basil and olive oil.",
-                R.drawable.burger, 15, "Easy", "550 kcal"));
-        return recipes;
     }
 }

@@ -63,12 +63,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             Type listType = new TypeToken<List<PopularItem>>() {}.getType();
             popularItems = gson.fromJson(jsonString.toString(), listType);
             
-            // Debug log
-            if (popularItems == null || popularItems.isEmpty()) {
-                Toast.makeText(context, "No popular items loaded from JSON", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Loaded " + popularItems.size() + " popular items", Toast.LENGTH_SHORT).show();
-            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,8 +78,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 foodItems.clear();
                 
-                // Debug log
-                Toast.makeText(context, "Fetched " + snapshot.getChildrenCount() + " items from Firebase", Toast.LENGTH_SHORT).show();
+
                 
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     try {
@@ -131,7 +125,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                 if (foodItems.isEmpty()) {
                     Toast.makeText(context, "No matching items found", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Found " + foodItems.size() + " matching items", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Found " + foodItems.size() + " popular items", Toast.LENGTH_SHORT).show();
                 }
                 
                 notifyDataSetChanged();

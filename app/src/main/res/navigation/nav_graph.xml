@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_categoryItemsFragment"
             app:destination="@id/categoryItemsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_summerFragment"
+            app:destination="@id/summerFragment" />
     </fragment>
 
     <fragment
@@ -56,5 +59,11 @@
         android:name="com.example.grabit.Fragments.PopularFragment"
         android:label="Popular"
         tools:layout="@layout/fragment_popular" />
+
+    <fragment
+        android:id="@+id/summerFragment"
+        android:name="com.example.grabit.Fragments.SummerFragment"
+        android:label="Summer Special"
+        tools:layout="@layout/fragment_summer" />
 
 </navigation> 

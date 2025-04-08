@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Light Theme (Default) -->
+    <style name="Theme.GrabIT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary_variant_light</item>
+        <item name="colorOnPrimary">@color/on_primary_light</item>
+
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/primary_light</item>
+        <item name="colorSecondaryVariant">@color/primary_variant_light</item>
+        <item name="colorOnSecondary">@color/on_primary_light</item>
+
+        <!-- Background & Surface colors -->
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorOnBackground">@color/on_background_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/status_bar_light</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Custom text colors -->
+        <item name="android:textColorPrimary">@color/on_background_light</item>
+        <item name="android:textColorSecondary">@color/on_background_light</item>
+
+        <!-- CardView and other component styles -->
+        <item name="cardBackgroundColor">@color/surface_light</item>
+        <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
     <!-- Base application theme. -->
-    <style name="Theme.GrabIT" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.GrabIT" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
@@ -32,4 +64,19 @@
     <style name="Theme.GrabIT.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.GrabIT.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Custom styles -->
+    <style name="Widget.App.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorOnPrimary">@color/on_primary_light</item>
+    </style>
 </resources> 
