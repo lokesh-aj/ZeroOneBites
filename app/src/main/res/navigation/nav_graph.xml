@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_categoryItemsFragment"
+            app:destination="@id/categoryItemsFragment" />
     </fragment>
 
     <fragment
@@ -38,5 +41,14 @@
         android:name="com.example.grabit.Fragments.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/categoryItemsFragment"
+        android:name="com.example.grabit.Fragments.CategoryItemsFragment"
+        android:label="CategoryItemsFragment">
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+    </fragment>
 
 </navigation> 
