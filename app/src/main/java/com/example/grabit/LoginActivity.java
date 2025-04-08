@@ -86,6 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("logged", true);
                         editor.putString("sapID", sapId);  // Storing a String value
+                        // Get and save user's name from the database
+                        String userName = snapshot.child("name").getValue(String.class);
+                        if (userName != null) {
+                            editor.putString("userName", userName);
+                        } else {
+                            editor.putString("userName", "User");  // Default name if not found
+                        }
                         editor.apply();
                         // Save login state in Firestore
                         FirebaseFirestore db = FirebaseFirestore.getInstance();

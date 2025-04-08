@@ -1,18 +1,27 @@
 package com.example.grabit.Model;
+
 public class GridItem {
-    private String title;
+    private String name;
     private int imageResource;
 
-    public GridItem(String title, int imageResource) {
-        this.title = title;
+    public GridItem(String name, int imageResource) {
+        this.name = name;
         this.imageResource = imageResource;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getImageResource() {
         return imageResource;
+    }
+
+    public void setImageResource(int imageResource) {
+        this.imageResource = imageResource;
     }
 }

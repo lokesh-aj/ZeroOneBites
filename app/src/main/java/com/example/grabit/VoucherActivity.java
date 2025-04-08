@@ -63,6 +63,7 @@ public class VoucherActivity extends AppCompatActivity {
         historyButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, Dashboard.class);
             intent.putExtra("fragment", "history");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         });

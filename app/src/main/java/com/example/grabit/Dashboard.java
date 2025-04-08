@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,6 +92,18 @@ public class Dashboard extends AppCompatActivity {
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Get user info from SharedPreferences
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String sapId = sharedPreferences.getString("sapID", "0");
+        String userName = sharedPreferences.getString("userName", "User");
+
+        // Set user info in navigation header
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvUserName = headerView.findViewById(R.id.tv_user_name);
+        TextView tvSapId = headerView.findViewById(R.id.tv_sap_id);
+        tvUserName.setText(userName);
+        tvSapId.setText("SAP ID: " + sapId);
 
         // Get the NavHostFragment
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()

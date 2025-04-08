@@ -85,14 +85,17 @@ public class HomeFragment extends Fragment {
         });
 
         // Set up category RecyclerView
-        categoryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         itemList = new ArrayList<>();
-        itemList.add(new GridItem("Breakfast", R.drawable.burger));
-        itemList.add(new GridItem("Lunch", R.drawable.burger));
-        itemList.add(new GridItem("Snacks", R.drawable.burger));
-        itemList.add(new GridItem("Snacks", R.drawable.burger));
-        itemList.add(new GridItem("Snacks", R.drawable.burger));
-        itemList.add(new GridItem("Snacks", R.drawable.burger));
+        itemList.add(new GridItem("Breakfast", R.drawable.ic_breakfast));
+        itemList.add(new GridItem("Snack", R.drawable.ic_snack));
+        itemList.add(new GridItem("Chinese", R.drawable.ic_chinese));
+        itemList.add(new GridItem("Chinese Starter", R.drawable.ic_chinese_starter));
+        itemList.add(new GridItem("Beverage", R.drawable.ic_beverage));
+        itemList.add(new GridItem("Main Course", R.drawable.ic_main_course));
+        itemList.add(new GridItem("A La Carte", R.drawable.ic_a_la_carte));
+        itemList.add(new GridItem("Chaat", R.drawable.ic_chaat));
+
         GridItemAdapter adapter = new GridItemAdapter(getContext(), itemList);
         categoryRecyclerView.setAdapter(adapter);
 
