@@ -161,6 +161,7 @@ public class VoucherActivity extends AppCompatActivity {
             qrCodeImage.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
+            Toast.makeText(this, "Error generating QR code", Toast.LENGTH_SHORT).show();
         }
     }
 

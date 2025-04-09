@@ -120,14 +120,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                     double rating2 = (double) item2.get("rating");
                     return Double.compare(rating2, rating1); // Descending order
                 });
-                
-                // Debug log
-                if (foodItems.isEmpty()) {
-                    Toast.makeText(context, "No matching items found", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Found " + foodItems.size() + " popular items", Toast.LENGTH_SHORT).show();
-                }
-                
+
                 notifyDataSetChanged();
             }
 
