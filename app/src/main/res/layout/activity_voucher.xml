@@ -123,6 +123,18 @@
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/btn_redeem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="Redeem"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"/>
+
+        <Button
             android:id="@+id/btn_share"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

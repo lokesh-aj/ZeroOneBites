@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +49,7 @@ public class HistoryFragment extends Fragment {
     private List<Voucher> voucherList;
     private FirebaseFirestore db;
     private String userId;
+    private Button btnRedeemed;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -94,6 +97,12 @@ public class HistoryFragment extends Fragment {
         // Initialize views
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView);
         emptyStateTextView = view.findViewById(R.id.emptyStateTextView);
+        btnRedeemed = view.findViewById(R.id.btn_redeemed);
+        
+        // Set up redeemed button click listener
+        btnRedeemed.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_historyFragment_to_redeemedFragment);
+        });
         
         // Initialize RecyclerView
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

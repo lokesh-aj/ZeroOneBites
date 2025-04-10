@@ -26,7 +26,7 @@ public class VoucherActivity extends AppCompatActivity {
 
     private TextView tvOrderId, tvOrderAmount, tvOrderDate, tvValidity, tvTransactionId, tvVoucherCode;
     private ImageView qrCodeImage;
-    private Button shareButton, historyButton;
+    private Button shareButton, historyButton, redeemButton;
     private ImageButton backButton;
     private FirebaseFirestore db;
     private String userId;
@@ -55,6 +55,7 @@ public class VoucherActivity extends AppCompatActivity {
         shareButton = findViewById(R.id.btn_share);
         historyButton = findViewById(R.id.btn_history);
         backButton = findViewById(R.id.btn_back);
+        redeemButton = findViewById(R.id.btn_redeem);
 
         // Set up back button
         backButton.setOnClickListener(v -> onBackPressed());
@@ -66,6 +67,22 @@ public class VoucherActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+        });
+
+        // Set up redeem button
+        redeemButton.setOnClickListener(v -> {
+            if (isFromHistory) {
+                String orderId = getIntent().getStringExtra("orderId");
+                String totalAmount = getIntent().getStringExtra("totalAmount");
+                String orderDate = getIntent().getStringExtra("orderDate");
+                String validity = getIntent().getStringExtra("validity");
+                String transactionId = getIntent().getStringExtra("transactionId");
+                String voucherCode = getIntent().getStringExtra("voucherCode");
+                
+                redeemVoucher(orderId, totalAmount, orderDate, validity, transactionId, voucherCode);
+            } else {
+                Toast.makeText(this, "Cannot redeem a new voucher", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Check if opened from history
@@ -190,5 +207,44 @@ public class VoucherActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(Intent.createChooser(shareIntent, "Share Voucher"));
+    }
+
+    private void redeemVoucher(String orderId, String totalAmount, String orderDate, String validity, String transactionId, String voucherCode) {
+        // Create a map for the redeemed voucher data
+        Map<String, Object> redeemedVoucherData = new HashMap<>();
+        redeemedVoucherData.put("orderId", orderId);
+        redeemedVoucherData.put("orderAmount", totalAmount);
+        redeemedVoucherData.put("orderDate", orderDate);
+        redeemedVoucherData.put("validity", validity);
+        redeemedVoucherData.put("transactionId", transactionId);
+        redeemedVoucherData.put("voucherCode", voucherCode);
+        redeemedVoucherData.put("userId", userId);
+        redeemedVoucherData.put("redeemedDate", getCurrentDate());
+
+        // First, save to redeemed collection
+        db.collection("RedeemedHistory")
+                .document(orderId)
+                .set(redeemedVoucherData)
+                .addOnSuccessListener(aVoid -> {
+                    // Then delete from Voucher collection
+                    db.collection("Voucher")
+                            .document(orderId)
+                            .delete()
+                            .addOnSuccessListener(aVoid1 -> {
+                                Toast.makeText(this, "Voucher redeemed successfully", Toast.LENGTH_SHORT).show();
+                                // Go back to history
+                                Intent intent = new Intent(this, Dashboard.class);
+                                intent.putExtra("fragment", "history");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Error redeeming voucher: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error saving redeemed voucher: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

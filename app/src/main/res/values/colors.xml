@@ -28,6 +28,7 @@
 	<color name="red">#BE1515</color>
 	<color name="gray">#B0B0B0</color>
 	<color name="light_gray">#F5F5F5</color>
+	<color name="orange">#FFFFA500</color>
 
 	<!-- Text Colors -->
 	<color name="text_primary">#212121</color>

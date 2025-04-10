@@ -31,7 +31,17 @@
         android:id="@+id/historyFragment"
         android:name="com.example.grabit.Fragments.HistoryFragment"
         android:label="History"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_redeemedFragment"
+            app:destination="@id/redeemedFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/redeemedFragment"
+        android:name="com.example.grabit.RedeemedFragment"
+        android:label="Redeemed Vouchers"
+        tools:layout="@layout/fragment_redeemed" />
 
     <fragment
         android:id="@+id/profileFragment"
