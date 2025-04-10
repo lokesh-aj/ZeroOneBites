@@ -18,15 +18,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etSapId, etPassword;
+    private EditText etSapId;
+    private EditText etPassword;
     private Button btnLogin;
-    private TextView signUpTextView;
+    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private SharedPreferences sharedPreferences;
 
@@ -51,13 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         etSapId = findViewById(R.id.sapIdEditText);
         etPassword = findViewById(R.id.passwordEditText);
         btnLogin = findViewById(R.id.loginButton);
-        signUpTextView = findViewById(R.id.signUpTextView);
 
         btnLogin.setOnClickListener(v -> loginUser());
-        
-        signUpTextView.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-        });
     }
 
     private void loginUser() {

@@ -2,6 +2,7 @@ package com.example.grabit.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             String userId = sharedPreferences.getString("sapID", "0");
 
             if (userId.equals("0")) {
-                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+                showLoginDialog();
                 return;
             }
 
@@ -86,13 +87,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             cartItem.put("name", menuItemName.get(position));
             cartItem.put("price", priceValue);
             cartItem.put("image", getImageUrlFromResource(menuItemImage.get(position)));
+            cartItem.put("quantity", 1);
+            cartItem.put("timestamp", System.currentTimeMillis());
 
             db.collection("Users").document(userId)
                     .collection("Cart").add(cartItem)
-                    .addOnSuccessListener(documentReference ->
-                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(documentReference -> {
+                        // Item added successfully
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle error
+                        Log.e("Cart", "Error adding item to cart: " + e.getMessage());
+                    });
         }
 
         private String getImageUrlFromResource(int imageResId) {
@@ -103,6 +109,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             } else {
                 return "https://example.com/default.jpg";
             }
+        }
+
+        private void showLoginDialog() {
+            // Implementation of showLoginDialog method
         }
     }
 }

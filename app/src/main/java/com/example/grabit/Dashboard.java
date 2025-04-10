@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import javax.annotation.Nullable;
+import java.util.Calendar;
 
 public class Dashboard extends AppCompatActivity {
     private void setCartBadge(int count) {
@@ -123,20 +124,7 @@ public class Dashboard extends AppCompatActivity {
 
             // Set up the NavigationView with the NavController
             navigationView.setNavigationItemSelectedListener(item -> {
-                if (item.getItemId() == R.id.nav_logout) {
-                    // Handle logout
-                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("logged", false);
-                    editor.apply();
-
-                    // Navigate to login activity
-                    Intent intent = new Intent(Dashboard.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return true;
-                }
-                // Handle other navigation items
+                // Handle navigation items
                 NavigationUI.onNavDestinationSelected(item, navController);
                 drawerLayout.closeDrawers();
                 return true;

@@ -1,7 +1,12 @@
 package com.example.grabit.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.grabit.LoginActivity;
 import com.example.grabit.Model.FoodItem;
 import com.example.grabit.R;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,34 +67,49 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
         holder.addToCartButton.setOnClickListener(v -> addToCart(item));
     }
 
-    private void addToCart(FoodItem item) {
-        String userId = sharedPreferences.getString("sapID", "0");
-        
-        if (!userId.equals("0")) {
-            // Convert price to double
-            double priceValue;
-            try {
-                priceValue = Double.parseDouble(item.getPrice());
-            } catch (NumberFormatException e) {
-                Toast.makeText(context, "Invalid price format", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void addToCart(FoodItem foodItem) {
+        // Get current user's SAP ID from SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String sapId = sharedPreferences.getString("sapID", "0");
 
-            Map<String, Object> cartItem = new HashMap<>();
-            cartItem.put("name", item.getName());
-            cartItem.put("price", priceValue);
-            cartItem.put("image", item.getImageUrl());
-            cartItem.put("quantity", 1);
-
-            db.collection("Users").document(userId)
-                    .collection("Cart").add(cartItem)
-                    .addOnSuccessListener(documentReference ->
-                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show());
-        } else {
-            Toast.makeText(context, "Please login first", Toast.LENGTH_SHORT).show();
+        if (sapId.equals("0")) {
+            // If user is not logged in, show login dialog
+            showLoginDialog();
+            return;
         }
+
+        // Create a new cart item
+        Map<String, Object> cartItem = new HashMap<>();
+        cartItem.put("name", foodItem.getName());
+        cartItem.put("price", foodItem.getPrice());
+        cartItem.put("image", foodItem.getImageUrl());
+        cartItem.put("quantity", 1);
+        cartItem.put("timestamp", System.currentTimeMillis());
+
+        // Add to Firestore
+        db.collection("Users")
+                .document(sapId)
+                .collection("Cart")
+                .add(cartItem)
+                .addOnSuccessListener(documentReference -> {
+                    // Item added successfully
+                })
+                .addOnFailureListener(e -> {
+                    // Handle error
+                    Log.e("Cart", "Error adding item to cart: " + e.getMessage());
+                });
+    }
+
+    private void showLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Login Required")
+                .setMessage("Please login to add items to cart")
+                .setPositiveButton("Login", (dialog, which) -> {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override

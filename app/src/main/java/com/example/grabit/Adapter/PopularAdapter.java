@@ -2,6 +2,7 @@ package com.example.grabit.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -181,43 +182,47 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             }
 
             // Handle "Add to Cart" click
-            binding.addToCartPopular.setOnClickListener(v -> addToCart(
-                    (String) item.get("name"),
-                    String.valueOf(item.get("price")),
-                    (String) item.get("image")
-            ));
+            binding.addToCartPopular.setOnClickListener(v -> addToCart(item));
         }
 
-        private void addToCart(String itemName, String price, String imageUrl) {
+        private void addToCart(Map<String, Object> item) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             String userId = sharedPreferences.getString("sapID", "0");
 
             if (userId.equals("0")) {
-                Toast.makeText(context, "Please login first", Toast.LENGTH_SHORT).show();
+                showLoginDialog();
                 return;
             }
 
             double priceValue;
             try {
-                priceValue = Double.parseDouble(price);
+                priceValue = Double.parseDouble(item.get("price").toString());
             } catch (NumberFormatException e) {
                 Toast.makeText(context, "Invalid price format", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             Map<String, Object> cartItem = new HashMap<>();
-            cartItem.put("name", itemName);
+            cartItem.put("name", item.get("name"));
             cartItem.put("price", priceValue);
-            cartItem.put("image", imageUrl);
+            cartItem.put("image", item.get("image"));
             cartItem.put("quantity", 1);
+            cartItem.put("timestamp", System.currentTimeMillis());
 
             db.collection("Users").document(userId)
                     .collection("Cart").add(cartItem)
-                    .addOnSuccessListener(documentReference ->
-                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(documentReference -> {
+                        // Item added successfully
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle error
+                        Log.e("Cart", "Error adding item to cart: " + e.getMessage());
+                    });
+        }
+
+        private void showLoginDialog() {
+            // Implementation of showLoginDialog method
         }
     }
 }

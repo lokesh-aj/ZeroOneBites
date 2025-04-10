@@ -1,0 +1,225 @@
+[
+  {"Item Name":"Tea","Total Orders":21157},
+  {"Item Name":"Samosa","Total Orders":13141},
+  {"Item Name":"Vada Pav","Total Orders":12190},
+  {"Item Name":"Veg Franky","Total Orders":5673},
+  {"Item Name":"Veg Fried Rice","Total Orders":4613},
+  {"Item Name":"Veg Sandwich","Total Orders":4140},
+  {"Item Name":"Missal Pav","Total Orders":2122},
+  {"Item Name":"Maggi","Total Orders":1686},
+  {"Item Name":"Veg Crispy","Total Orders":1676},
+  {"Item Name":"Schezwan Fried Rice","Total Orders":1660},
+  {"Item Name":"Paneer Pasanda","Total Orders":1631},
+  {"Item Name":"Pav Bhaji","Total Orders":1486},
+  {"Item Name":"Masala Dosa","Total Orders":1467},
+  {"Item Name":"Paneer Lajawab","Total Orders":1428},
+  {"Item Name":"Dal Tadka","Total Orders":1368},
+  {"Item Name":"Jeera Rice","Total Orders":1301},
+  {"Item Name":"Dal Khichdi","Total Orders":1247},
+  {"Item Name":"Sada Dosa","Total Orders":1211},
+  {"Item Name":"Onion Uttapam","Total Orders":1135},
+  {"Item Name":"Veg Kolhapuri","Total Orders":1123},
+  {"Item Name":"Paneer Peshawar","Total Orders":1066},
+  {"Item Name":"Plain Uttapam","Total Orders":737},
+  {"Item Name":"Spring Dosa","Total Orders":729},
+  {"Item Name":"Veg Pulao Thali","Total Orders":724},
+  {"Item Name":"Mysore Sada Dosa","Total Orders":722},
+  {"Item Name":"Egg curry with rice","Total Orders":719},
+  {"Item Name":"Cheese Pav Bhaji","Total Orders":718},
+  {"Item Name":"Veg Schezwan Noodles","Total Orders":716},
+  {"Item Name":"Pani puri","Total Orders":716},
+  {"Item Name":"Paneer Franky","Total Orders":715},
+  {"Item Name":"Masala Uttapam","Total Orders":714},
+  {"Item Name":"Tawa Pulao","Total Orders":711},
+  {"Item Name":"Roti","Total Orders":708},
+  {"Item Name":"Banna Milk Shake","Total Orders":707},
+  {"Item Name":"Tomato Onion Uttapam","Total Orders":706},
+  {"Item Name":"Orange Juice","Total Orders":705},
+  {"Item Name":"Veg Hong Kong Noodles","Total Orders":703},
+  {"Item Name":"Chopsy Dosa","Total Orders":703},
+  {"Item Name":"Kulcha","Total Orders":701},
+  {"Item Name":"Fried eggs with bread","Total Orders":698},
+  {"Item Name":"Veg Anda Curry","Total Orders":697},
+  {"Item Name":"Garlic Naan","Total Orders":695},
+  {"Item Name":"Chinese bhel ","Total Orders":694},
+  {"Item Name":"Veg Pulao","Total Orders":694},
+  {"Item Name":"Extra Pav","Total Orders":694},
+  {"Item Name":"Cheese Sada Dosa","Total Orders":693},
+  {"Item Name":"Tomato Uttapam","Total Orders":691},
+  {"Item Name":"Coffee","Total Orders":690},
+  {"Item Name":"Butter Roti","Total Orders":690},
+  {"Item Name":"Cheese Paratha","Total Orders":689},
+  {"Item Name":"Aloo Paratha","Total Orders":688},
+  {"Item Name":"Toast Butter & Jam","Total Orders":687},
+  {"Item Name":"Paneer Pulao","Total Orders":686},
+  {"Item Name":"Dahi papdi chat","Total Orders":686},
+  {"Item Name":"Veg Biryani","Total Orders":686},
+  {"Item Name":"Manchurian Franky","Total Orders":685},
+  {"Item Name":"Egg bhurji with 2 pav","Total Orders":684},
+  {"Item Name":"Veg Hakka Noodles","Total Orders":683},
+  {"Item Name":"Mushroom Chilly Dry","Total Orders":681},
+  {"Item Name":"Dahi samosa chat","Total Orders":679},
+  {"Item Name":"Methi Paratha","Total Orders":679},
+  {"Item Name":"Onion Paratha","Total Orders":678},
+  {"Item Name":"Veg Grilled Sandwich","Total Orders":678},
+  {"Item Name":"Upma","Total Orders":677},
+  {"Item Name":"Chikoo Milk Shake","Total Orders":676},
+  {"Item Name":"Paneer Paratha","Total Orders":675},
+  {"Item Name":"Dahi batata puri","Total Orders":675},
+  {"Item Name":"Dal Fry","Total Orders":675},
+  {"Item Name":"Paneer Crispy","Total Orders":674},
+  {"Item Name":"Hong Kong Fried Rice","Total Orders":674},
+  {"Item Name":"Tawa Veg","Total Orders":672},
+  {"Item Name":"Hot Bournvita","Total Orders":672},
+  {"Item Name":"Butter Paratha","Total Orders":672},
+  {"Item Name":"Veg Cheese Sandwich","Total Orders":671},
+  {"Item Name":"Potato Wada with Pav","Total Orders":670},
+  {"Item Name":"Mosambi Juice","Total Orders":669},
+  {"Item Name":"Steamed Rice","Total Orders":669},
+  {"Item Name":"Paneer Chilly Franky","Total Orders":669},
+  {"Item Name":"Sev puri ","Total Orders":668},
+  {"Item Name":"Potato Wada (2 pcs)","Total Orders":667},
+  {"Item Name":"Cheese Masala Dosa","Total Orders":667},
+  {"Item Name":"Cheese Garlic Naan","Total Orders":666},
+  {"Item Name":"Boiled eggs","Total Orders":665},
+  {"Item Name":"Butter Kulcha","Total Orders":663},
+  {"Item Name":"Schezwan Crispy Fried Potato","Total Orders":663},
+  {"Item Name":"Dahi Idli","Total Orders":662},
+  {"Item Name":"Potato Poha","Total Orders":662},
+  {"Item Name":"Kesar Milk Shake","Total Orders":661},
+  {"Item Name":"Toast with Butter","Total Orders":660},
+  {"Item Name":"Full meal","Total Orders":658},
+  {"Item Name":"Sukha bhej ","Total Orders":658},
+  {"Item Name":"Cheese Schezwan Dosa","Total Orders":656},
+  {"Item Name":"Idili Fry","Total Orders":655},
+  {"Item Name":"Rose Milk Shake","Total Orders":654},
+  {"Item Name":"Mysore Masala Dosa","Total Orders":653},
+  {"Item Name":"Schezwan Dosa","Total Orders":653},
+  {"Item Name":"Cold Coffee with Ice Cream","Total Orders":652},
+  {"Item Name":"Veg Chilly Dry","Total Orders":651},
+  {"Item Name":"Singapore Fried Rice","Total Orders":651},
+  {"Item Name":"Medu Wada Sambhar","Total Orders":650},
+  {"Item Name":"Fresh Lime Water","Total Orders":650},
+  {"Item Name":"Laccha Paratha","Total Orders":649},
+  {"Item Name":"Cold Coffee","Total Orders":647},
+  {"Item Name":"Sweet Lassi","Total Orders":646},
+  {"Item Name":"Watermelon Juice","Total Orders":645},
+  {"Item Name":"Chole Bhature","Total Orders":642},
+  {"Item Name":"Pineapple Juice","Total Orders":639},
+  {"Item Name":"Bhel puri ","Total Orders":636},
+  {"Item Name":"Hot Chocolate","Total Orders":635},
+  {"Item Name":"Veg Manchurian Dry","Total Orders":631},
+  {"Item Name":"Paneer Chilly Dry","Total Orders":629},
+  {"Item Name":"Chocolate Milk Shake","Total Orders":629},
+  {"Item Name":"Butter Naan","Total Orders":627},
+  {"Item Name":"Idli Sambhar","Total Orders":625},
+  {"Item Name":"Butter Idli","Total Orders":623},
+  {"Item Name":"Naan","Total Orders":622},
+  {"Item Name":"Masala omlette with bread","Total Orders":618},
+  {"Item Name":"Cheese Plain Sandwich","Total Orders":617},
+  {
+    "Item Name": "Mango Shake",
+    "Total Orders": 450,
+    "Average Rating": 4.5
+  },
+  {
+    "Item Name": "Lassi",
+    "Total Orders": 380,
+    "Average Rating": 4.3
+  },
+  {
+    "Item Name": "Ice Cream",
+    "Total Orders": 520,
+    "Average Rating": 4.7
+  },
+  {
+    "Item Name": "Cold Coffee",
+    "Total Orders": 420,
+    "Average Rating": 4.4
+  },
+  {
+    "Item Name": "Thandai",
+    "Total Orders": 350,
+    "Average Rating": 4.2
+  },
+  {
+    "Item Name": "Faluda",
+    "Total Orders": 400,
+    "Average Rating": 4.3
+  },
+  {
+    "Item Name": "Kulfi",
+    "Total Orders": 480,
+    "Average Rating": 4.6
+  },
+  {
+    "Item Name": "Milkshake",
+    "Total Orders": 460,
+    "Average Rating": 4.4
+  },
+  {
+    "Item Name": "Watermelon Juice",
+    "Total Orders": 320,
+    "Average Rating": 4.1
+  },
+  {
+    "Item Name": "Coconut Water",
+    "Total Orders": 290,
+    "Average Rating": 4.0
+  },
+  {
+    "Item Name": "Fresh Lime Water",
+    "Total Orders": 280,
+    "Average Rating": 4.0
+  },
+  {
+    "Item Name": "Pineapple Juice",
+    "Total Orders": 270,
+    "Average Rating": 4.1
+  },
+  {
+    "Item Name": "Orange Juice",
+    "Total Orders": 260,
+    "Average Rating": 4.2
+  },
+  {
+    "Item Name": "Mosambi Juice",
+    "Total Orders": 250,
+    "Average Rating": 4.0
+  },
+  {
+    "Item Name": "Chikoo Milk Shake",
+    "Total Orders": 240,
+    "Average Rating": 4.3
+  },
+  {
+    "Item Name": "Kesar Milk Shake",
+    "Total Orders": 230,
+    "Average Rating": 4.4
+  },
+  {
+    "Item Name": "Rose Milk Shake",
+    "Total Orders": 220,
+    "Average Rating": 4.2
+  },
+  {
+    "Item Name": "Chocolate Milk Shake",
+    "Total Orders": 210,
+    "Average Rating": 4.5
+  },
+  {
+    "Item Name": "Banna Milk Shake",
+    "Total Orders": 200,
+    "Average Rating": 4.3
+  },
+  {
+    "Item Name": "Hot Bournvita",
+    "Total Orders": 190,
+    "Average Rating": 4.1
+  },
+  {
+    "Item Name": "Hot Chocolate",
+    "Total Orders": 180,
+    "Average Rating": 4.4
+  }
+] 

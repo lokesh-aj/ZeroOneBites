@@ -20,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VoucherActivity extends AppCompatActivity {
