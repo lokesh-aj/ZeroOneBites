@@ -1,0 +1,64 @@
+{
+  "Food Items": {
+    "item1": {
+      "Item ID": "1",
+      "Item Name": "Cheese Burger",
+      "Image URL": "https://th.bing.com/th/id/ODL.97ea06e2ef8667f4043e0ef503fcdbbb?w=134&h=100&c=10&rs=1&o=6&dpr=1.3&pid=AlgoBlockDebug",
+      "Price (INR)": "150"
+    },
+    "item2": {
+      "Item ID": "2",
+      "Item Name": "Margherita Pizza",
+      "Image URL": "https://th.bing.com/th/id/OSK.52f0ded55519c5fbdebda84dacb6b33d?w=197&h=118&c=7&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": 200
+    },
+    "item3": {
+      "Item ID": "3",
+      "Item Name": "Veggie Sandwich",
+      "Image URL": "https://th.bing.com/th/id/OSK.c7b051394231c42a440bcb3213ea6bd3?w=197&h=118&c=7&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": "100"
+    },
+    "item4": {
+      "Item ID": "4",
+      "Item Name": "French Fries",
+      "Image URL": "https://th.bing.com/th/id/OIP.RPGOzPo0STkH3tUt0zgHbAHaE8?w=200&h=200&c=10&o=6&dpr=1.3&pid=genserp&rm=2",
+      "Price (INR)": 80
+    },
+    "item5": {
+      "Item ID": "5",
+      "Item Name": "Chicken Nuggets",
+      "Image URL": "https://th.bing.com/th/id/OSK.9177c9d8fb4bc58755feead801310800?w=194&h=145&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": "120"
+    },
+    "item6": {
+      "Item ID": "6",
+      "Item Name": "Pasta Alfredo",
+      "Image URL": "https://th.bing.com/th/id/OSK.f5678246b6267f21e4669407c4dd7053?w=194&h=194&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": 180
+    },
+    "item7": {
+      "Item ID": "7",
+      "Item Name": "Grilled Sandwich",
+      "Image URL": "https://th.bing.com/th/id/OSK.8853182af9273416180a7b2f233545a0?w=194&h=194&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": "110"
+    },
+    "item8": {
+      "Item ID": "8",
+      "Item Name": "Tacos",
+      "Image URL": "https://th.bing.com/th/id/ODL.d45327f49ba52bb152ed1675e1ef79d7?w=134&h=100&c=10&rs=1&o=6&dpr=1.3&pid=AlgoBlockDebug",
+      "Price (INR)": 130
+    },
+    "item9": {
+      "Item ID": "9",
+      "Item Name": "Chocolate Donut",
+      "Image URL": "https://th.bing.com/th/id/OSK.9c0f83ba6c652ea78378a6670aaf8d15?w=194&h=291&rs=2&qlt=80&o=6&cdv=1&dpr=1.3&pid=16.1",
+      "Price (INR)": "60"
+    },
+    "item10": {
+      "Item ID": "10",
+      "Item Name": "Cold Coffee",
+      "Image URL": "https://th.bing.com/th/id/OIP.dCSS87xLIINZxe6C3Xv8yAAAAA?w=201&h=300&c=10&rs=1&bgcl=fffffe&r=0&o=6&dpr=1.3&pid=23.1",
+      "Price (INR)": 90
+    }
+  }
+}
