@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 return "🍜 All Day Menu Available";
             }
         }
-        return "🚫 Canteen is closed"; // Return closed message if outside business hours
+        return "🚫 Canteen is closed"; // Return closed message if outside business hour
     }
 
     private void animateMealType() {
